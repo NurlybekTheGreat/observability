@@ -55,7 +55,7 @@ services:
     ports:
       - "9009:9009"
     volumes:
-      - "./docker/mimir.yaml:/etc/mimir/mimir.yaml"
+      - "./config/mimir.yaml:/etc/mimir/mimir.yaml"
       - "/tmp/mimir/rules:/tmp/mimir/rules"
     networks:
       - observer
@@ -64,11 +64,12 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus:/etc/prometheus/
+      - "./config/prometheus.yaml:/etc/prometheus/prometheus.yml"
+#      - "./prometheus:/etc/prometheus/"
     networks:
       - observer
-    command: >-
-      --config.file=/app.cfg/prometheus.yml
-      --storage.tsdb.path=/prometheus
-      --web.console.libraries=/usr/share/prometheus/console_libraries
-      --web.console.templates=/usr/share/prometheus/consoles
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/usr/share/prometheus/console_libraries
+      - --web.console.templates=/usr/share/prometheus/consoles
