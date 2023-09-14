@@ -1,8 +1,11 @@
 import json
 import datetime
+import time
+import logging
 
 import pytz
 import requests
+
 
 
 current_datetime = datetime.datetime.now(pytz.timezone('Asia/Almaty')).isoformat('T')
@@ -31,4 +34,8 @@ response = requests.post(
     }
 )
 
-print(response)
+counter = 0
+while True:
+    logging.error(f'{response} {counter}')
+    time.sleep(0.2)
+    counter += 1
