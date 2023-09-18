@@ -39,6 +39,7 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
+
   mimir:
     image: grafana/mimir:2.5.0
     command: "-config.file=/etc/mimir/mimir.yaml"
@@ -75,6 +76,7 @@ services:
       - "9090:9090"
     volumes:
       - "./config/prometheus.yaml:/etc/prometheus/prometheus.yml"
+      - "./config/alert.rules:/etc/prometheus/alert.rules"
       - "prometheus_data:/prometheus"
     networks:
       - datawiz
