@@ -4,11 +4,12 @@ route:
 receivers:
     - name: smtp
       email_configs:
-          - smarthost: mail.your-email-service-domain:port
-            hello: your-email-service-domain
-            to: 'to@example.com'
-            from: 'from@example.com'
-            auth_username: 'from@example.com'
-            auth_password: 'your-password'
+          - smarthost: smtp.office365.com:587
+            hello: smtp.office365.com
+            to:
+            from: no-reply@datago.kz
+            auth_username: no-reply@datago.kz
+            auth_password:
+            auth_identity: no-reply@datago.kz
             send_resolved: true
-            require_tls: false
+            require_tls: true
