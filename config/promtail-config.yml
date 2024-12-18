@@ -1,0 +1,19 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push  # URL сервера Loki (здесь предполагается, что Loki в том же Docker-сетапе)
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          instance: "observatory"
+          job: varlogs
+          __path__: /var/log/*log  # Путь до логов, которые вы хотите собирать

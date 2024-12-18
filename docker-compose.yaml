@@ -22,6 +22,7 @@ services:
     image: grafana/promtail:2.8.0
     volumes:
       - /var/log:/var/log
+      - ./config/promtail-config.yml:/etc/promtail/config.yml
     command: -config.file=/etc/promtail/config.yml
     networks:
       - datawiz
@@ -101,5 +102,18 @@ services:
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/etc/alertmanager/data'
+    networks:
+      - datawiz
+
+  fluent-bit:
+    image: grafana/fluent-bit-plugin-loki:latest
+    container_name: fluent-bit
+    environment:
+      - LOKI_URL=http://loki:3100/loki/api/v1/push
+    volumes:
+      - "./config/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf"
+    ports:
+      - "24225:24224"
+      - "24225:24224/udp"
     networks:
       - datawiz

@@ -11,17 +11,80 @@ scrape_configs:
   - job_name: 'clickhouse'
     scrape_interval: 30s
     static_configs:
-      - targets: ['host.docker.internal:9363' ]
+      - targets: ['10.8.10.59:9116' ]
 
-  - job_name: 'node'
+  - job_name: 'observatory'
     scrape_interval: 5s
     static_configs:
       - targets: ['node-exporter:9100']
 
+  - job_name: 'clickhouse-db-prod'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.8.10.59:9101']
+
+  - job_name: 'datawiz-prod'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.8.10.59:9102']
+
+  - job_name: 'odoo'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.8.10.59:9103']
+
+  - job_name: 'erp-next'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.8.10.59:9105']
+
+  - job_name: 'dg-nix-min-1-dashboard'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['10.8.10.59:9106']
+
   - job_name: 'rabbitmq'
     scrape_interval: 5s
     static_configs:
-      - targets: [ 'host.docker.internal:15692' ]
+      - targets: [ '10.8.10.59:15692' ]
+
+  - job_name: '1x-custom export'
+    static_configs:
+      - targets: ['10.8.10.59:9184']
+
+  - job_name: '1x-exporter-beta'
+    static_configs:
+      - targets: ['10.8.10.59:9182']
+
+  - job_name: '1x-exporter'
+    static_configs:
+      - targets: ['10.8.10.59:9183']
+
+  - job_name: '1x-exporter new'
+    static_configs:
+      - targets: ['10.8.10.59:9189']
+
+  - job_name: 'BeareerToken'
+    static_configs:
+      - targets: ['10.8.10.59:9185']
+
+  - job_name: 'API-Exporter'
+    static_configs:
+      - targets: ['10.8.10.59:9186']
+
+  - job_name: 'Orchestrator'
+    static_configs:
+      - targets: ['10.8.10.59:9188']
+
+  - job_name: 'postgres_exporter'
+    static_configs:
+      - targets: ['10.8.10.59:9187']
+
+  - job_name: 'prefect'
+    scrape_interval: 1m
+    static_configs:
+      - targets: ['10.8.10.59:9104']
+
 
 rule_files:
   - 'alert.rules'

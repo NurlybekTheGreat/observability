@@ -1,15 +1,19 @@
+global:
+  smtp_smarthost: 'smtp.office365.com:587'
+  smtp_from: 'no-reply@datago.kz'
+  smtp_auth_username: 'no-reply@datago.kz'
+  smtp_auth_password: '1Qas61138'
+  smtp_require_tls: true
+
 route:
-    receiver: smtp
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: 'email-alert'
 
 receivers:
-    - name: smtp
-      email_configs:
-          - smarthost: smtp.office365.com:587
-            hello: smtp.office365.com
-            to:
-            from: no-reply@datago.kz
-            auth_username: no-reply@datago.kz
-            auth_password:
-            auth_identity: no-reply@datago.kz
-            send_resolved: true
-            require_tls: true
+  - name: 'email-alert'
+    email_configs:
+      - to: 'n.berdimuratov@1x-bet.kz'
+        send_resolved: true

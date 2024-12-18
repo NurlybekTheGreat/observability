@@ -1,6 +1,38 @@
 groups:
 - name: alert_rules
   rules:
+
+  # 1. Alert for high CPU usage
+  - alert: HighCPUUsage
+    expr: 100 * (1 - avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 80
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High CPU usage on [{{ $labels.instance }}:{{ $labels.job }}]"
+      description: "CPU usage has been greater than 80% for the last 5 minutes on instance [{{ $labels.instance }}:{{ $labels.job }}]."
+
+  # 2. Alert for high memory usage
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High memory usage on [{{ $labels.instance }}:{{ $labels.job }}]"
+      description: "Memory usage has been greater than 90% for the last 5 minutes on instance [{{ $labels.instance }}:{{ $labels.job }}]."
+
+  # 3. Alert for low disk space
+  - alert: LowDiskSpace
+    expr: node_filesystem_free_percent < 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Low disk space on [{{ $labels.instance }}:{{ $labels.job }}]"
+      description: "Free disk space is less than 10% on instance [{{ $labels.instance }}:{{ $labels.job }}]."
+
+  # 4. Alert for instance down (for any monitored instance)
   - alert: InstanceDown
     expr: up == 0
     for: 1m
@@ -9,10 +41,73 @@ groups:
     annotations:
       summary: "Instance [{{ $labels.instance }}] down"
       description: "[{{ $labels.instance }}] of job [{{ $labels.job }}] has been down for more than 1 minute."
-  - alert: DiskSpaceFree10Percent
-    expr: node_filesystem_free_percent <= 10
+
+  # 5. Alert for RabbitMQ down
+  - alert: RabbitMQDown
+    expr: up{job="rabbitmq"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "RabbitMQ instance down"
+      description: "RabbitMQ service is down for more than 1 minute."
+
+  # 6. Alert for PostgreSQL exporter down
+  - alert: PostgresExporterDown
+    expr: up{job="postgres_exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "PostgreSQL exporter instance down"
+      description: "PostgreSQL exporter is down for more than 1 minute."
+
+  # 7. Alert for ClickHouse exporter down
+  - alert: ClickHouseExporterDown
+    expr: up{job="clickhouse"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "ClickHouse exporter down"
+      description: "ClickHouse exporter is down for more than 1 minute."
+
+  # 8. Alert for Prefect service down
+  - alert: PrefectDown
+    expr: up{job="prefect"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prefect service down"
+      description: "Prefect service is down for more than 1 minute."
+
+  # 9. Alert for high network traffic
+  - alert: HighNetworkTraffic
+    expr: (rate(node_network_receive_bytes_total[1m]) > 800000000) or (rate(node_network_transmit_bytes_total[1m]) > 800000000)
+    labels:
+      severity: critical
+    annotations:
+      summary: "High network traffic detected on instance {{ $labels.instance }}"
+      description: "Network traffic (receive or transmit) is above 80% of the total bandwidth on instance [{{ $labels.instance }}:{{ $labels.job }}]."
+
+
+  # 10. Alert for high disk I/O
+  - alert: HighDiskIO
+    expr: rate(node_disk_reads_bytes_total[5m]) > 1000000 or rate(node_disk_writes_bytes_total[5m]) > 1000000
+    for: 5m
     labels:
       severity: warning
     annotations:
-      summary: "Instance [{{ $labels.instance }}] has 10% or less Free disk space"
-      description: "[{{ $labels.instance }}] has only {{ $value }}% or less free."
+      summary: "High disk I/O on [{{ $labels.instance }}:{{ $labels.job}}]"
+      description: "Disk read/write speed has exceeded 1MB/s for the last 5 minutes on instance [{{ $labels.instance }}:{{ $labels.job }}]."
+
+  # 11. Alert for high load average (CPU load over a threshold)
+  - alert: HighLoadAverage
+    expr: avg(rate(node_load1[5m])) / count(node_cpu_seconds_total{mode="idle"}) * 100 > 75
+    labels:
+      severity: critical
+    annotations:
+      summary: "High load average on instance [{{ $labels.instance }}:{{ $labels.job }}]"
+      description: "Load average for the last 1 minute is above 75% of the CPU capacity on instance [{{ $labels.instance }}:{{ $labels.job }}]."
+

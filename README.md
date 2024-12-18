@@ -15,3 +15,5 @@ docker run -d --name container-name \
               --log-opt loki-batch-size=3 \
               image-name
 ```
+
+#Скрипт для пуша /root/auto-push.sh
