@@ -16,4 +16,7 @@ docker run -d --name container-name \
               image-name
 ```
 
-#Скрипт для пуша /root/auto-push.sh
+```
+#Скрипт для пуша /tmp/auto-push.sh
+
+```
