@@ -17,3 +17,5 @@ receivers:
     email_configs:
       - to: 'n.berdimuratov@1x-bet.kz'
         send_resolved: true
+      - to: 'development@datago.kz'
+        send_resolved: true

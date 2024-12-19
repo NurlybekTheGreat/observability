@@ -17,6 +17,6 @@ docker run -d --name container-name \
 ```
 
 ```
-#Скрипт для пуша /tmp/auto-push.sh
+#Скрипт для пуша /tmp/auto-push.sh работает в 7 утра
 
 ```
